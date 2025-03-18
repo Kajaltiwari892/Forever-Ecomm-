@@ -1,20 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HiOutlineSearch, HiOutlineShoppingBag, HiMenu } from 'react-icons/hi';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+
+  
+  const updateCartCount = () => {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+    setCartCount(count);
+  };
+
+  useEffect(() => {
+    
+    updateCartCount();
+    
+  
+    window.addEventListener('storage', updateCartCount);
+    window.addEventListener('cartUpdated', updateCartCount);
+
+    return () => {
+      window.removeEventListener('storage', updateCartCount);
+      window.removeEventListener('cartUpdated', updateCartCount);
+    };
+  }, []);
 
   return (
-    <nav className="bg-white shadow-sm ">
+    <nav className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16  ">
+        <div className="flex items-center justify-between h-16">
           {/* Left section */}
           <div className="flex items-center">
             {/* Logo */}
             <a href="/" className="text-2xl font-bold text-gray-800">
-             Forever
+              Forever
             </a>
-            
             {/* Desktop Navigation */}
             <div className="hidden md:flex md:ml-10 space-x-8">
               <a href="/" className="text-gray-700 hover:text-gray-900">Home</a>
@@ -35,9 +56,11 @@ const Navbar = () => {
             {/* Cart */}
             <a href="/cart" className="p-2 text-gray-700 hover:text-gray-900 relative">
               <HiOutlineShoppingBag className="h-6 w-6" />
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                3
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                  {cartCount}
+                </span>
+              )}
             </a>
 
             {/* Account */}
@@ -77,3 +100,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

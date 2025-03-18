@@ -93,7 +93,7 @@ const App = () => {
           }
         />
         <Route
-          path="/order"
+          path="/orders"
           element={
             <ProtectedRoute isLoggedIn={isLoggedIn}>
               <Orders />

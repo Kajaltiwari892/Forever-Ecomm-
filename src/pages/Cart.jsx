@@ -25,11 +25,15 @@ const Cart = () => {
       .map((item) =>
         item.id === id ? { ...item, quantity: item.quantity - 1 } : item
       )
-      .filter((item) => item.quantity > 0); 
+      .filter((item) => item.quantity > 0);
     updateCartInLocalStorage(updatedCart);
   };
 
- 
+  const removeItem = (id) => {
+    const updatedCart = cartItems.filter((item) => item.id !== id);
+    updateCartInLocalStorage(updatedCart);
+  };
+
   const subtotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
@@ -52,6 +56,7 @@ const Cart = () => {
                 <th className="border border-gray-300 px-4 py-2">Price</th>
                 <th className="border border-gray-300 px-4 py-2">Quantity</th>
                 <th className="border border-gray-300 px-4 py-2">Total</th>
+                <th className="border border-gray-300 px-4 py-2">Cancel</th>
               </tr>
             </thead>
             <tbody>
@@ -84,6 +89,14 @@ const Cart = () => {
                   <td className="border border-gray-300 px-4 py-2">
                     ${(item.price * item.quantity).toFixed(2)}
                   </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <button
+                      onClick={() => removeItem(item.id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    >
+                      Cancel
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -103,7 +116,7 @@ const Cart = () => {
                 Total: <span className="text-green-600">${total.toFixed(2)}</span>
               </p>
               <button className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                PROCEED TO CHECKOUT
+                PROCEED TO PAYMENT
               </button>
             </div>
           </div>
@@ -114,3 +127,4 @@ const Cart = () => {
 };
 
 export default Cart;
+

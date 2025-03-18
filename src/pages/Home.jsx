@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -7,37 +7,33 @@ const Home = () => {
 
   useEffect(() => {
     // Fetch products from the Fake Store API
-    fetch('https://fakestoreapi.com/products')
+    fetch("https://fakestoreapi.com/products")
       .then((res) => res.json())
       .then((data) => setProducts(data))
-      .catch((error) => console.error('Error fetching products:', error));
+      .catch((error) => console.error("Error fetching products:", error));
   }, []);
 
   const handleAddToCart = (product) => {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    
     const existingIndex = cart.findIndex((item) => item.id === product.id);
 
     if (existingIndex !== -1) {
-     
       cart[existingIndex].quantity += 1;
     } else {
-    
       cart.push({ ...product, quantity: 1 });
     }
 
-  
-    localStorage.setItem('cart', JSON.stringify(cart));
-
-   
-    navigate('/cart');
+    localStorage.setItem("cart", JSON.stringify(cart));
+    window.dispatchEvent(new Event('cartUpdated'));
+    navigate("/cart");
   };
 
   return (
-    
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">My E-commerce Store</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">
+        My E-commerce Store
+      </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product) => (
           <div
